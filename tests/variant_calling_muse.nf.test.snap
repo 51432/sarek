@@ -1,7 +1,7 @@
 {
     "-profile test --tools muse --input recalibrated_somatic.csv -stub": {
         "content": [
-            18,
+            17,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -19,23 +19,22 @@
                     "mosdepth": "0.3.10"
                 },
                 "MUSE_CALL": {
-                    "MuSE": "2.1.2"
+                    "muse": "2.1.2"
                 },
                 "MUSE_SUMP": {
-                    "MuSE": "2.1.2",
-                    "bgzip": "1.22.1"
+                    "bgzip": "1.22.1",
+                    "muse": "2.1.2"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
-                },
-                "TABIX_MUSE": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -45,7 +44,9 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -174,15 +175,15 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-04-08T12:23:40.799740292",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T23:20:03.610965252"
+        }
     },
     "-profile test --tools muse --input recalibrated_somatic.csv": {
         "content": [
-            19,
+            18,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -200,23 +201,22 @@
                     "mosdepth": "0.3.10"
                 },
                 "MUSE_CALL": {
-                    "MuSE": "2.1.2"
+                    "muse": "2.1.2"
                 },
                 "MUSE_SUMP": {
-                    "MuSE": "2.1.2",
-                    "bgzip": "1.22.1"
+                    "bgzip": "1.22.1",
+                    "muse": "2.1.2"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
-                },
-                "TABIX_MUSE": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -226,6 +226,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -363,10 +364,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-02-09T15:12:56.502933061",
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:21:45.551599795"
+            "nextflow": "25.10.2"
+        }
     }
 }

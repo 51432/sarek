@@ -9,10 +9,11 @@
                     "tabix": "1.21"
                 },
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.3a"
+                    "snpeff": "5.4a"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
@@ -31,6 +32,7 @@
                 "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
@@ -118,7 +120,7 @@
             6,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.3a"
+                    "snpeff": "5.4a"
                 },
                 "SNPSIFT_ANNMEM": {
                     "snpsift": "5.4a"
@@ -127,7 +129,8 @@
                     "snpsift": "5.4a"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
@@ -144,6 +147,7 @@
                 "annotation/test/test_snpEff_VEP_snpSift.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
@@ -227,10 +231,11 @@
             4,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.3a"
+                    "snpeff": "5.4a"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
@@ -245,6 +250,7 @@
                 "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
