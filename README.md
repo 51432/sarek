@@ -1,234 +1,422 @@
-<h1>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/nf-core-sarek_logo_dark.png">
-    <img alt="nf-core/sarek" src="docs/images/nf-core-sarek_logo_light.png">
-  </picture>
-</h1>
+# nf-core/sarek（中文使用说明）
 
-[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/sarek)
-[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)
-[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)
-[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
+> 面向第一次接触 **Linux / Nextflow / nf-core/sarek** 的用户。
+> 这份 README 基于当前仓库内容整理，目标是“能按步骤跑起来”。
 
-[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.2-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)
-[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
-[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
-[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/sarek)
+## 1. 项目简介
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)
-[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)
-[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
-[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+`nf-core/sarek` 是一个用于 DNA 测序变异检测的 Nextflow 流程，支持：
 
-## Introduction
+- **Germline（胚系）变异**分析
+- **Somatic（体细胞）变异**分析
+- **肿瘤-正常配对**与肿瘤单样本场景
+- WGS / WES / 靶向数据（取决于输入和参数）
 
-**nf-core/sarek** is a workflow designed to detect variants on whole genome or targeted sequencing data. Initially designed for Human, and Mouse, it can work on any species with a reference genome. Sarek can also handle tumour / normal pairs and could include additional relapses.
+它与 nf-core 的关系：
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
+- 本项目就是 nf-core 官方维护的 `sarek` 流程仓库。
+- 使用 Nextflow DSL2 编写，按模块调用工具，便于复现和迁移。
 
-On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/sarek/results).
+当前仓库中可见的常用工具（按类别举例）：
 
-It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
+- 比对与预处理：`bwa-mem`、`bwa-mem2`、`dragmap`、`GATK` 相关步骤
+- 小变异调用：`Mutect2`、`HaplotypeCaller`、`Strelka`、`freebayes`、`lofreq` 等
+- 结构变异 / 拷贝数：`manta`、`tiddit`、`ascat`、`cnvkit`、`controlfreec`
+- 注释：`snpEff`、`VEP`、`SnpSift`、`bcftools annotate`
+- 质控汇总：`MultiQC`
 
-<p align="center">
-    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=30%>
-</p>
+通俗理解：
 
-## Pipeline summary
+- **Manta / TIDDIT**：偏向检测结构变异（大片段变化）。
+- **ASCAT / CNVkit / Control-FREEC**：偏向检测拷贝数变化（CNV）。
+- **Mutect2 / Strelka 等**：偏向检测 SNP/Indel（小变异）。
 
-Depending on the options and samples provided, the pipeline can currently perform the following:
+---
 
-- Form consensus reads from UMI sequences (`fgbio`)
-- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
-- Contamination removal (`BBSplit`, enabled by `--tools bbsplit`)
-- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
-- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
-- _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to "Map Reads to Reference" + "Process BAM file" (`--aligner parabricks`)
-- Summarise alignment statistics (`samtools stats`, `mosdepth`)
-- Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):
-  - `ASCAT`
-  - `CNVkit`
-  - `Control-FREEC`
-  - `DeepVariant`
-  - `freebayes`
-  - `GATK HaplotypeCaller`
-  - `GATK Mutect2`
-  - `indexcov`
-  - `Lofreq`
-  - `Manta`
-  - `mpileup`
-  - `MSIsensor2`
-  - `MSIsensor-pro`
-  - `MuSE`
-  - `Sentieon Haplotyper`
-  - `Strelka`
-  - `TIDDIT`
-- Post-variant calling options, one of:
-  - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs
-  - `Varlociraptor` for all vcfs
-- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`, `SnpSift`)
-- Summarise and represent QC (`MultiQC`)
+## 2. 输入数据说明
 
-<p align="center">
-    <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
-</p>
+### 2.1 你至少需要准备什么
 
-## Usage
+最基础要有：
 
-> [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+1. 一个样本表（CSV，传给 `--input`）
+2. 原始数据或中间数据（FastQ / BAM / CRAM 等，取决于 `--step`）
+3. 参考基因组与已知位点资源（可用 `--genome` 或本地 `--fasta` + 其他文件）
 
-First, prepare a samplesheet with your input data that looks as follows:
+### 2.2 BAM / CRAM / 索引是什么
 
-`samplesheet.csv`:
+- **BAM**：二进制比对结果文件。
+- **CRAM**：更省空间的比对结果格式。
+- **BAI / CRAI**：对应 BAM / CRAM 的索引文件（让工具可快速随机访问）。
+
+如果从 `markduplicates` 或更后步骤启动，通常需要 BAM/CRAM 及其索引。
+
+### 2.3 肿瘤-正常配对是什么意思
+
+在样本表中：
+
+- 同一个 `patient`
+- 不同的 `sample`
+- 用 `status` 区分：`0` 正常、`1` 肿瘤
+
+这样流程能把同一患者的正常样本与肿瘤样本配对做体细胞分析。
+
+### 2.4 样本表（CSV）做什么
+
+`--input` 指向的 CSV 告诉流程：
+
+- 有哪些样本
+- 每个样本对应哪些文件
+- 是哪种输入类型（FASTQ / BAM / CRAM / VCF 等）
+- 是否配对、是否多 lane
+
+仓库自带示例：`assets/samplesheet.csv`。
+
+### 2.5 `params.yaml` / `custom.config` / `nextflow.config` 的区别
+
+- **`params.yaml`**：放“流程参数”（如 `input`、`outdir`、`tools`、`fasta`）。推荐新手使用。
+- **`custom.config`**：放“Nextflow 运行层配置”（如资源、executor、容器参数）。
+- **`nextflow.config`**：仓库默认总配置，定义了很多默认参数与 profile。
+
+> 注意：nf-core 建议不要用 `-c` 去传业务参数，业务参数优先放命令行或 `-params-file`。
+
+---
+
+## 3. 运行前准备（新手清单）
+
+请按下面清单逐项确认：
+
+- [ ] 已安装可用版本的 Nextflow（本仓库 README 徽章显示当前要求为 `>=25.10.2`）
+- [ ] 已准备容器运行方式（常见为 `singularity` / `apptainer` 或 `docker`）
+- [ ] 已准备本地参考数据（FASTA、dbSNP、known_indels、intervals 等）
+- [ ] 已规划容器缓存目录（避免反复拉镜像）
+- [ ] 已规划工作目录 `work/` 和结果目录 `result/`
+- [ ] 磁盘空间充足（WGS 通常非常占空间）
+- [ ] 所有路径尽量使用**绝对路径**
+
+---
+
+## 4. 推荐目录结构（新手版）
+
+```text
+/project/sarek_run/
+├── input/
+│   ├── samplesheet.csv
+│   └── bam_or_fastq/
+├── reference/
+│   ├── genome.fa
+│   ├── genome.fa.fai
+│   ├── genome.dict
+│   ├── dbsnp.vcf.gz
+│   ├── dbsnp.vcf.gz.tbi
+│   ├── known_indels.vcf.gz
+│   └── intervals.bed
+├── config/
+│   ├── params.yaml
+│   └── custom.config
+├── work/
+├── result/
+├── singularity_cache/
+└── logs/
+```
+
+- `input/`：输入样本表和原始/中间数据
+- `reference/`：本地参考与注释资源
+- `config/`：参数文件与运行配置
+- `work/`：Nextflow 任务中间目录（排错最关键）
+- `result/`：最终发布结果目录（`--outdir`）
+- `singularity_cache/`：容器缓存（强烈建议长期保留）
+- `logs/`：你手工保存的运行日志
+
+---
+
+## 5. 最基础运行方法（一步一步）
+
+下面给一个“能直接照抄改路径”的最小流程。
+
+### 5.1 准备输入样本表
+
+最简 FASTQ 示例（与仓库示例格式一致）：
 
 ```csv
 patient,sample,lane,fastq_1,fastq_2
-ID1,S1,L002,ID1_S1_L002_R1_001.fastq.gz,ID1_S1_L002_R2_001.fastq.gz
+PATIENT1,SAMPLE1,L001,/abs/path/S1_R1.fastq.gz,/abs/path/S1_R2.fastq.gz
 ```
 
-Each row represents a pair of fastq files (paired end).
+若是肿瘤-正常配对，建议补 `status`（`0` 正常，`1` 肿瘤）和 `patient` 对应关系。
 
-Now, you can run the pipeline using:
+### 5.2 准备 `params.yaml`
+
+```yaml
+input: '/project/sarek_run/input/samplesheet.csv'
+outdir: '/project/sarek_run/result'
+step: 'mapping'
+
+# 二选一：
+# 1) 用 iGenomes 名称（默认是 GATK.GRCh38）
+genome: 'GATK.GRCh38'
+# 2) 或显式提供本地参考（更适合离线/内网）
+# fasta: '/project/sarek_run/reference/genome.fa'
+# dbsnp: '/project/sarek_run/reference/dbsnp.vcf.gz'
+# known_indels: '/project/sarek_run/reference/known_indels.vcf.gz'
+# intervals: '/project/sarek_run/reference/intervals.bed'
+
+# 按需选择工具，可多个逗号分隔
+tools: 'manta,tiddit,ascat'
+
+# 常见离线场景建议
+igenomes_ignore: true
+save_output_as_bam: false
+```
+
+### 5.3 准备 `custom.config`（可选）
+
+仓库里没有现成 `custom.config`，新手可自己建一个最小版，例如：
+
+```groovy
+process {
+  cpus = 8
+  memory = '32 GB'
+  time = '24h'
+}
+
+singularity {
+  enabled = true
+  autoMounts = true
+}
+```
+
+### 5.4 设置环境变量（以 Singularity/Apptainer 为例）
 
 ```bash
-nextflow run nf-core/sarek \
-   -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
+export NXF_HOME=/project/sarek_run/.nextflow
+export NXF_WORK=/project/sarek_run/work
+export NXF_SINGULARITY_CACHEDIR=/project/sarek_run/singularity_cache
+mkdir -p "$NXF_HOME" "$NXF_WORK" "$NXF_SINGULARITY_CACHEDIR"
 ```
 
-> [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+### 5.5 执行运行
 
-For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
+在仓库目录（`/workspace/sarek`）下：
 
-## Pipeline output
+```bash
+nextflow run . \
+  -profile singularity \
+  -params-file /project/sarek_run/config/params.yaml \
+  -c /project/sarek_run/config/custom.config
+```
 
-To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.
-For more details about the output files and reports, please refer to the
-[output documentation](https://nf-co.re/sarek/output).
+如果你跑的是官方远程仓库版本，可用：
 
-## Benchmarking
+```bash
+nextflow run nf-core/sarek -r <版本号> -profile singularity -params-file params.yaml
+```
 
-On each release, the pipeline is run on 3 full size tests:
+### 5.6 中断后继续跑
 
-- `test_full` runs tumor-normal data for one patient from the SEQ2C consortium
-- `test_full_germline` runs a WGS 30X Genome-in-a-Bottle(NA12878) dataset
-- `test_full_germline_ncbench_agilent` runs two WES samples with 75M and 200M reads (data available [here](https://github.com/ncbench/ncbench-workflow#contributing-callsets)). The results are uploaded to Zenodo, evaluated against a truth dataset, and results are made available via the [NCBench dashboard](https://ncbench.github.io/report/report.html#).
+```bash
+nextflow run . -profile singularity -params-file /project/sarek_run/config/params.yaml -resume
+```
 
-## Credits
+`-resume` 会复用已成功任务，避免重算。
 
-Sarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
-Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
+---
 
-The Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.
+## 6. 重要参数解释（新手版）
 
-Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera](https://seqera.io))
+以下是最常用且最容易混淆的参数：
 
-Main developers:
+- `input`
+  - 做什么：指定样本表 CSV 路径。
+  - 何时改：每次换批次样本都要改。
 
-- [Maxime U Garcia](https://github.com/maxulysse)
-- [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- `outdir`
+  - 做什么：指定最终结果输出目录。
+  - 何时改：每次新项目建议新目录。
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+- `step`
+  - 做什么：指定从哪一步开始，常见有 `mapping`、`markduplicates`、`prepare_recalibration`、`recalibrate`、`variant_calling`、`annotate`。
+  - 何时改：你有中间产物，想从流程中段接着跑时。
 
-- [Abhinav Sharma](https://github.com/abhi18av)
-- [Adam Talbot](https://github.com/adamrtalbot)
-- [Adrian Lärkeryd](https://github.com/adrlar)
-- [Àitor Olivares](https://github.com/AitorPeseta)
-- [Alexander Peltzer](https://github.com/apeltzer)
-- [Alison Meynert](https://github.com/ameynert)
-- [Anders Sune Pedersen](https://github.com/asp8200)
-- [arontommi](https://github.com/arontommi)
-- [BarryDigby](https://github.com/BarryDigby)
-- [Bekir Ergüner](https://github.com/berguner)
-- [bjornnystedt](https://github.com/bjornnystedt)
-- [cgpu](https://github.com/cgpu)
-- [Chela James](https://github.com/chelauk)
-- [David Mas-Ponte](https://github.com/davidmasp)
-- [Edmund Miller](https://github.com/edmundmiller)
-- [Famke Bäuerle](https://github.com/famosab)
-- [Francesco Lescai](https://github.com/lescai)
-- [Francisco Martínez](https://github.com/nevinwu)
-- [Gavin Mackenzie](https://github.com/GCJMackenzie)
-- [Gisela Gabernet](https://github.com/ggabernet)
-- [Grant Neilson](https://github.com/grantn5)
-- [gulfshores](https://github.com/gulfshores)
-- [Harshil Patel](https://github.com/drpatelh)
-- [Hongwei Ye](https://github.com/YeHW)
-- [James A. Fellows Yates](https://github.com/jfy133)
-- [Jesper Eisfeldt](https://github.com/J35P312)
-- [Johannes Alneberg](https://github.com/alneberg)
-- [Jonas Kjellin](https://github.com/kjellinjonas)
-- [José Fernández Navarro](https://github.com/jfnavarro)
-- [Júlia Mir Pedrol](https://github.com/mirpedrol)
-- [Ken Brewer](https://github.com/kenibrewer)
-- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
-- [Lucia Conde](https://github.com/lconde-ucl)
-- [Louis Le Nézet](https://github.com/LouisLeNezet)
-- [Malin Larsson](https://github.com/malinlarsson)
-- [Marcel Martin](https://github.com/marcelm)
-- [Nick Smith](https://github.com/nickhsmith)
-- [Nicolas Schcolnicov](https://github.com/nschcolnicov)
-- [Nilesh Tawari](https://github.com/nilesh-tawari)
-- [Nils Homer](https://github.com/nh13)
-- [Olga Botvinnik](https://github.com/olgabot)
-- [Oskar Wacker](https://github.com/WackerO)
-- [pallolason](https://github.com/pallolason)
-- [Paul Cantalupo](https://github.com/pcantalupo)
-- [Phil Ewels](https://github.com/ewels)
-- [Pierre Lindenbaum](https://github.com/lindenb)
-- [Sabrina Krakau](https://github.com/skrakau)
-- [Sam Minot](https://github.com/sminot)
-- [Sebastian-D](https://github.com/Sebastian-D)
-- [Silvia Morini](https://github.com/silviamorins)
-- [Simon Pearce](https://github.com/SPPearce)
-- [Solenne Correard](https://github.com/scorreard)
-- [Susanne Jodoin](https://github.com/SusiJo)
-- [Szilveszter Juhos](https://github.com/szilvajuhos)
-- [Tobias Koch](https://github.com/KochTobi)
-- [Winni Kretzschmar](https://github.com/winni2k)
-- [Patricie Skaláková](https://github.com/Patricie34)
+- `tools`
+  - 做什么：指定使用哪些工具（逗号分隔），涵盖变异检测/注释等。
+  - 何时改：按分析目标选择（如结构变异、CNV、小变异等）。
 
-## Acknowledgements
+- `fasta`
+  - 做什么：本地参考基因组 FASTA 路径。
+  - 何时改：不用 `--genome` 或离线运行时基本都要改。
 
-|      [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken)      |            [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)             |
-| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |
-| [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |
-|              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |
-|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |
+- `dbsnp`
+  - 做什么：dbSNP 已知位点 VCF。
+  - 何时改：做 BQSR、注释或相关调用时通常需要。
 
-## Contributions & Support
+- `known_indels`
+  - 做什么：已知 indel 位点文件（常用于重校准相关步骤）。
+  - 何时改：走 GATK 重校准链路时应提供。
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+- `intervals`
+  - 做什么：目标区域（BED/interval）文件。
+  - 何时改：WES/Panel 场景通常要改。
 
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Maxime U Garcia](mailto:maxime.garcia@seqera.io?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek)
+- `genome`
+  - 做什么：使用 iGenomes 里的参考名（默认 `GATK.GRCh38`）。
+  - 何时改：你想直接用 iGenomes 预置参考时。
 
-## Citations
+- `igenomes_ignore`
+  - 做什么：是否忽略 iGenomes 配置。
+  - 何时改：你完全使用本地参考时常设为 `true`。
 
-If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
+- `save_output_as_bam`
+  - 做什么：让预处理输出保存为 BAM（否则常见是 CRAM）。
+  - 何时改：下游工具只接受 BAM 或团队规范要求 BAM 时。
 
-> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _NAR Genomics and Bioinformatics_ Volume 6, Issue 2, June 2024, lqae031, [doi: 10.1093/nargab/lqae031](https://doi.org/10.1093/nargab/lqae031).
+- `-profile`
+  - 做什么：选择运行环境配置（如 `singularity`、`docker`）。
+  - 何时改：根据你实际计算平台和容器方案。
 
-> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).
+- `-resume`
+  - 做什么：断点续跑，复用缓存。
+  - 何时改：中断重跑时几乎都应加。
 
-You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476425](https://doi.org/10.5281/zenodo.3476425)
+---
 
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+## 7. 本地/离线运行建议（强烈推荐）
 
-You can cite the `nf-core` publication as follows:
+1. **尽量使用本地参考数据**
+   - 参考文件大且会反复读取，放本地更稳、更快。
 
-> **The nf-core framework for community-curated bioinformatics pipelines.**
->
-> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
->
-> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
+2. **尽量使用本地容器缓存**
+   - 避免每次拉取镜像，减少网络相关失败。
 
-## CHANGELOG
+3. **不要过度依赖远程 S3 路径**
+   - 网络抖动、权限、TLS 问题都会导致任务失败或重试。
 
-- [CHANGELOG](CHANGELOG.md)
+4. **路径尽量写绝对路径**
+   - 在集群/容器环境中，相对路径最容易引发“文件找不到”。
+
+5. **网络差时先检查**
+   - 镜像拉取是否成功
+   - 参考文件是否可访问
+   - DNS / 代理 / 防火墙设置
+
+6. **减少在线下载失败的方法**
+   - 预下载参考与注释文件
+   - 预热容器缓存（先拉好镜像）
+   - 尽量固定运行参数与 profile，减少缓存失效
+
+---
+
+## 8. 常见报错与排查（新手重点）
+
+### 8.1 `Singularity image pull failed`
+
+通常表示：镜像拉取失败（网络/权限/仓库连接问题）。
+先查：
+
+1. `NXF_SINGULARITY_CACHEDIR` 是否可写
+2. 节点是否能访问镜像源
+3. 是否有代理/TLS 限制
+
+### 8.2 `TLS handshake timeout`
+
+通常表示：网络连接慢或被中间网络设备阻断。
+先查：
+
+- 当前节点外网连通性
+- DNS 解析与代理配置
+- 是否可以改为本地缓存避免在线拉取
+
+### 8.3 `connection reset by peer`
+
+通常表示：远端连接被重置（网络或服务端问题）。
+先查：
+
+- 是否偶发（可重试）
+- 是否只在下载阶段报错
+- 是否有并发过高导致连接不稳定
+
+### 8.4 `process terminated with exit status (1)`
+
+通常表示：任务命令执行失败，但“原因不在这行字里”。
+先查：
+
+1. 失败任务目录下的 `.command.err`
+2. 同目录 `.command.out`、`.command.sh`
+3. 顶层 `.nextflow.log`
+
+### 8.5 `Execution is retried (1)`
+
+通常表示：Nextflow 按策略自动重试一次。
+这**不等于最终失败**，要看最后状态是否成功。
+
+### 8.6 `Submitted / Cached / Re-submitted / Error` 区别
+
+- `Submitted process`：任务已提交执行。
+- `Cached process`：命中缓存，直接复用历史成功结果。
+- `Re-submitted process`：任务重试后再次提交。
+- `Error`：任务最终失败。
+
+### 8.7 流程中断后怎么继续
+
+- 原目录下直接加 `-resume` 重跑。
+- 不要随意删 `work/`，否则缓存会丢失。
+
+### 8.8 如何去 `work` 目录查失败任务
+
+一般步骤：
+
+1. 从日志里找到失败任务的 `work/xx/xxxx...` 路径
+2. 进入该目录
+3. 重点看：`.command.sh`、`.command.err`、`.command.out`
+
+### 8.9 如何看 `.nextflow.log`
+
+```bash
+tail -n 200 .nextflow.log
+```
+
+或者按关键词搜索：
+
+```bash
+rg -n "ERROR|WARN|Caused by|work/" .nextflow.log
+```
+
+---
+
+## 9. 如何判断流程是否真的完成
+
+可以同时看 4 件事：
+
+1. **终端/日志出现成功结束信息**（如完成总结，无未处理错误）
+2. `result/` 下有预期目录（如 `pipeline_info/`、`multiqc/`、对应工具输出目录）
+3. `.nextflow.log` 最后没有持续失败堆栈
+4. 关键样本关键步骤产物存在且非空
+
+`Cached process` 的意思是“之前跑过且成功，这次直接复用”，不是失败。
+
+如果要核对某个样本某一步是否完成：
+
+- 看 `result/` 对应样本目录是否有预期文件
+- 回查日志中该任务是否最终 `COMPLETED` 而非 `ERROR`
+
+---
+
+## 10. 给新手的实用建议
+
+1. 先用 1~2 个小样本试跑整链路。
+2. 运行中尽量不要频繁改 `-profile`。
+3. `singularity_cache` 尽量长期保留。
+4. 中断后优先 `-resume`，不要直接重头跑。
+5. 出现一次 retry 不一定失败，先看最终状态。
+6. 报错先看失败任务目录的 `.command.err`，再看 `.nextflow.log`。
+
+---
+
+## 补充链接
+
+- 官方使用文档入口：`docs/usage.md`（仓库内提示以 nf-core 网站最新版为准）
+- 输出说明：`docs/output.md`
+- 引用文献与工具引用：`CITATIONS.md`
+- 变更记录：`CHANGELOG.md`
+
+如果你是首次部署，建议先使用测试 profile 验证 Nextflow + 容器环境可用，再上真实数据。
