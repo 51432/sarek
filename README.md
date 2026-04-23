@@ -191,22 +191,34 @@ singularity {
 ```bash
 export NXF_HOME=/project/sarek_run/.nextflow
 export NXF_WORK=/project/sarek_run/work
-export NXF_SINGULARITY_CACHEDIR=/project/sarek_run/singularity_cache
-mkdir -p "$NXF_HOME" "$NXF_WORK" "$NXF_SINGULARITY_CACHEDIR"
+
+export NXF_DISABLE_CHECK_LATEST=true
+export NXF_SINGULARITY_CACHEDIR=/data/person/wup/liusy/sarek/singularity_cache
+export SINGULARITY_CACHEDIR=/data/person/wup/liusy/sarek/singularity_cache
+export APPTAINER_CACHEDIR=/data/person/wup/liusy/sarek/singularity_cache
 ```
 
 ### 5.5 执行运行
 
-在仓库目录（`/workspace/sarek`）下：
+在仓库目录（`/data/person/wup/liusy/sarek`）下：
 
 ```bash
 nextflow run . \
   -profile singularity \
-  -params-file /project/sarek_run/config/params.yaml \
-  -c /project/sarek_run/config/custom.config
+  -params-file /data/person/wup/liusy/sarek/test/params.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom.config
+
+#nohup后台进行
+nohup nextflow run . \
+  -ansi-log false \
+  -profile singularity \
+  -params-file /data/person/wup/liusy/sarek/test/params.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom.config \
+  > sarek_formal.log 2>&1 &
+
 ```
 
-如果你跑的是官方远程仓库版本，可用：
+如果你跑的是官方远程仓库版本，可用(不推荐，网不好)：
 
 ```bash
 nextflow run nf-core/sarek -r <版本号> -profile singularity -params-file params.yaml
@@ -215,7 +227,20 @@ nextflow run nf-core/sarek -r <版本号> -profile singularity -params-file para
 ### 5.6 中断后继续跑
 
 ```bash
-nextflow run . -profile singularity -params-file /project/sarek_run/config/params.yaml -resume
+nextflow run . \
+  -profile singularity \
+  -params-file /data/person/wup/liusy/sarek/test/params.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom.config \
+  -resume
+
+#nohup后台进行
+nohup nextflow run . \
+  -ansi-log false \
+  -profile singularity \
+  -params-file /data/person/wup/liusy/sarek/test/params.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom.config \
+  -resume \
+  > sarek_formal.log 2>&1 &
 ```
 
 `-resume` 会复用已成功任务，避免重算。
