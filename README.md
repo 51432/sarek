@@ -17,12 +17,12 @@
 - 本项目就是 nf-core 官方维护的 `sarek` 流程仓库。
 - 使用 Nextflow DSL2 编写，按模块调用工具，便于复现和迁移。
 
-当前仓库中可见的常用工具（按类别举例）：
+当前仓库中可见的常用step/toosl（按类别举例）：
 
-- 比对与预处理：`bwa-mem`、`bwa-mem2`、`dragmap`、`GATK` 相关步骤
-- 小变异调用：`Mutect2`、`HaplotypeCaller`、`Strelka`、`freebayes`、`lofreq` 等
-- 结构变异 / 拷贝数：`manta`、`tiddit`、`ascat`、`cnvkit`、`controlfreec`
-- 注释：`snpEff`、`VEP`、`SnpSift`、`bcftools annotate`
+- 比对mapping/markduplicates/prepare_recalibration/recalibrate：`bwa-mem`、`bwa-mem2`、`dragmap`、`GATK` 相关步骤
+- 小变异调用variant_calling：`Mutect2`、`HaplotypeCaller`、`Strelka`、`freebayes`、`lofreq` 等
+- 结构变异variant_calling / 拷贝数：`manta`、`tiddit`、`ascat`、`cnvkit`、`controlfreec`
+- 注释annotate：`snpEff`、`VEP`、`SnpSift`、`bcftools annotate`
 - 质控汇总：`MultiQC`
 
 通俗理解：
@@ -60,6 +60,13 @@
 - 用 `status` 区分：`0` 正常、`1` 肿瘤
 
 这样流程能把同一患者的正常样本与肿瘤样本配对做体细胞分析。
+
+可以做什么：
+小变异：mutect2 或 strelka（也有人两者都跑）
+结构变异：manta,tiddit
+CNV：ascat / cnvkit / controlfreec
+MSI：msisensor2 或 msisensorpro
+注释：vep 或 snpeff
 
 ### 2.4 样本表（CSV）做什么
 
@@ -151,6 +158,7 @@ PATIENT1,SAMPLE1,L001,/abs/path/S1_R1.fastq.gz,/abs/path/S1_R2.fastq.gz
 input: '/project/sarek_run/input/samplesheet.csv'
 outdir: '/project/sarek_run/result'
 step: 'mapping'
+(根据当前仓库的参数定义，step 可选：mapping（默认）, markduplicates,prepare_recalibration,recalibrate,variant_calling,annotate)
 
 # 二选一：
 # 1) 用 iGenomes 名称（默认是 GATK.GRCh38）
@@ -163,6 +171,7 @@ genome: 'GATK.GRCh38'
 
 # 按需选择工具，可多个逗号分隔
 tools: 'manta,tiddit,ascat'
+(tools可选ascat,bbsplit,bcfann,cnvkit,controlfreec,deepvariant,freebayes,haplotypecaller,indexcov,lofreq,manta,merge,mpileup,msisensor2,msisensorpro,muse,mutect2,ngscheckmate,sentieon_dedup,sentieon_dnascope,sentieon_haplotyper,sentieon_tnscope,snpeff,snpsift,strelka,tiddit,vep,varlociraptor)
 
 # 常见离线场景建议
 igenomes_ignore: true
