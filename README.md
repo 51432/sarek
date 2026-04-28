@@ -217,13 +217,21 @@ nextflow run . \
   -params-file /data/person/wup/liusy/sarek/test/params.yaml \
   -c /data/person/wup/liusy/sarek/test/custom.config
 
-#nohup后台进行
+#nohup后台进行WGS的manta、TIDDIT、ASCAT
 nohup nextflow run . \
   -ansi-log false \
   -profile singularity \
   -params-file /data/person/wup/liusy/sarek/test/params.yaml \
   -c /data/person/wup/liusy/sarek/test/custom.config \
   > sarek_formal.log 2>&1 &
+
+# WES数据的mutect2
+nohup nextflow run . \
+  -ansi-log false \
+  -profile singularity \
+  -params-file /data/person/wup/liusy/sarek/test/params_wes_mutect2.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom_wes_mutect2.conf \
+  > /data/person/wup/liusy/sarek/logs/wes_mutect2.log 2>&1 &
 
 ```
 
