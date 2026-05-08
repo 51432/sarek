@@ -220,8 +220,8 @@ nextflow run . \
   -profile singularity \
   -params-file /data/person/wup/liusy/sarek/test/params.yaml \
   -c /data/person/wup/liusy/sarek/test/custom.config
-```bash
 ```
+```bash
 #nohup后台进行WGS的manta、TIDDIT、ASCAT
 nohup nextflow run . \
   -ansi-log false \
