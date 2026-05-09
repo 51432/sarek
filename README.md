@@ -270,6 +270,23 @@ nohup nextflow run . \
 
 ---
 
+## mutect2得到的wgs/wes的vcf.gz文件进行annovar注释
+提供sarek_mutect2_annovar_manifest.tsv
+| pair_id | tumor_sample | normal_sample | vcf |
+| :--- | :--- | :--- | :--- |
+| HP_tumor_vs_HP_normal | HP_tumor | HP_normal | /data/person/wup/liusy/sarek/test/result/variant_calling/mutect2/HP_tumor_vs_HP_normal/HP_tumor_vs_HP_normal.mutect2.filtered.vcf.gz |
+| XHS_tumor_vs_XHS_normal | XHS_tumor | XHS_normal | /data/person/wup/liusy/sarek/test/result/variant_calling/mutect2/XHS_tumor_vs_XHS_normal/XHS_tumor_vs_XHS_normal.mutect2.filtered.vcf.gz |
+
+```bash
+cd /data/person/wup/liusy/wgs/scripts
+```
+
+```bash
+sbatch --array=1-${N}%8   run_annovar_sarek_mutect2_array.slurm   sarek_mutect2_annovar_manifest.tsv   /data/person/wup/liusy/sarek/annotation/annovar/   /data/person/wup/liusy/sarek/tmp_annovar_mutect2
+```
+
+
+
 ## 6. 重要参数解释（新手版）
 
 以下是最常用且最容易混淆的参数：
