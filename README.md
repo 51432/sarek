@@ -248,26 +248,26 @@ nextflow run . \
   -params-file /data/person/wup/liusy/sarek/test/params.yaml \
   -c /data/person/wup/liusy/sarek/test/custom.config
 ```
+**WGS的manta、TIDDIT、ASCAT**
 ```bash
-#nohup后台进行WGS的manta、TIDDIT、ASCAT
 nohup nextflow run . \
   -ansi-log false \
   -profile singularity \
-  -params-file /data/person/wup/liusy/sarek/test/params.yaml \
-  -c /data/person/wup/liusy/sarek/test/custom.config \
-  > sarek_formal.log 2>&1 &
+  -params-file /data/person/wup/liusy/sarek/test/params_wgs_manta.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom_wgs.config \
+  > sarek.log 2>&1 &
 ```
+**WES数据的mutect2**
 ```bash
-# WES数据的mutect2
 nohup nextflow run . \
   -ansi-log false \
   -profile singularity \
   -params-file /data/person/wup/liusy/sarek/test/params_wes_mutect2.yaml \
   -c /data/person/wup/liusy/sarek/test/custom_wes_mutect2.conf \
-  > /data/person/wup/liusy/sarek/wes_mutect2.log 2>&1 &
+  > /data/person/wup/liusy/sarek/sarek.log 2>&1 &
 
 ```
-**WES数据variant_calling: ascat, manta, tiddit **
+**WES数据variant_calling: ascat, manta, tiddit**
 ```bash
 
 nohup nextflow run . \
@@ -275,7 +275,7 @@ nohup nextflow run . \
   -profile singularity \
   -params-file /data/person/wup/liusy/sarek/test/params_wes_manta.yaml \
   -c /data/person/wup/liusy/sarek/test/custom_wes_mutect2.conf \
-  > /data/person/wup/liusy/sarek/wes_mutect2.log 2>&1 &
+  > /data/person/wup/liusy/sarek/sarek.log 2>&1 &
 
 ```
 
@@ -301,7 +301,7 @@ nohup nextflow run . \
   -params-file /data/person/wup/liusy/sarek/test/params.yaml \
   -c /data/person/wup/liusy/sarek/test/custom.config \
   -resume \
-  > sarek_formal.log 2>&1 &
+  > sarek.log 2>&1 &
 ```
 
 `-resume` 会复用已成功任务，避免重算。
