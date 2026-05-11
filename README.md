@@ -33,6 +33,33 @@
 
 ---
 
+## 此流程涉及的软件较多，并且涉及大量的数据库，流程支持任何一步开始。为目前测试的最复杂的流程。进行变异检测软件的选择
+
+<table>
+  <thead>
+    <tr>
+      <th>Tool</th><th>WGS</th><th>WES</th><th>Panel</th><th>Germline</th><th>Tumor-Only</th><th>Somatic (Tumor-Normal)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>DeepVariant</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>-</td></tr>
+    <tr><td>FreeBayes</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    <tr><td>GATK HaplotypeCaller</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>-</td></tr>
+    <tr><td>GATK Mutect2</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>✓</td><td>✓</td></tr>
+    <tr><td>lofreq</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>✓</td><td>-</td></tr>
+    <tr><td>mpileup</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>-</td></tr>
+    <tr><td>Strelka</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>✓</td></tr>
+    <tr><td>Manta</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    <tr><td>indexcov</td><td>✓</td><td>-</td><td>-</td><td>✓</td><td>-</td><td>✓</td></tr>
+    <tr><td>TIDDIT</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    <tr><td>ASCAT</td><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>✓</td></tr>
+    <tr><td>CNVKit</td><td>✓</td><td>✓</td><td>-</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    <tr><td>Control-FREEC</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>✓</td><td>✓</td></tr>
+    <tr><td>MSIsensorPro</td><td>✓</td><td>✓</td><td>✓</td><td>-</td><td>✓</td><td>✓</td></tr>
+  </tbody>
+</table>
+
+
 ## 2. 输入数据说明
 
 ### 2.1 你至少需要准备什么
