@@ -267,6 +267,17 @@ nohup nextflow run . \
   > /data/person/wup/liusy/sarek/wes_mutect2.log 2>&1 &
 
 ```
+**WES数据variant_calling: ascat, manta, tiddit **
+```bash
+
+nohup nextflow run . \
+  -ansi-log false \
+  -profile singularity \
+  -params-file /data/person/wup/liusy/sarek/test/params_wes_manta.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom_wes_mutect2.conf \
+  > /data/person/wup/liusy/sarek/wes_mutect2.log 2>&1 &
+
+```
 
 如果你跑的是官方远程仓库版本，可用(不推荐，网不好)：
 
