@@ -249,6 +249,7 @@ nextflow run . \
   -c /data/person/wup/liusy/sarek/test/custom.config
 ```
 **WGS的manta、TIDDIT、ASCAT**
+input: /data/person/wup/liusy/sarek/wgs_manta_bqsr.csv
 ```bash
 nohup nextflow run . \
   -ansi-log false \
