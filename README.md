@@ -240,6 +240,8 @@ export APPTAINER_CACHEDIR=/data/person/wup/liusy/sarek/singularity_cache
 
 ```bash
 conda activate nextflow
+```
+```bash
 cd /data/person/wup/liusy/sarek
 ```
 ```bash
