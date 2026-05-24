@@ -270,6 +270,17 @@ nohup nextflow run . \
   > /data/person/wup/liusy/sarek/sarek.log 2>&1 &
 
 ```
+**WGS数据mapping(align, markduplication, BQSR)**
+csv: wgs_fastq.csv
+```bash
+nohup nextflow run . \
+  -ansi-log false \
+  -profile singularity \
+  -params-file /data/person/wup/liusy/sarek/test/params_wgs_fastq.yaml \
+  -c /data/person/wup/liusy/sarek/test/custom_wgs_fastq.conf \
+  > /data/person/wup/liusy/sarek/sarek.log 2>&1 &
+
+```
 **WES数据variant_calling: ascat, manta, tiddit**
 ```bash
 
