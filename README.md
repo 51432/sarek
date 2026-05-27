@@ -253,6 +253,7 @@ nextflow run . \
 **WGS的manta、TIDDIT、ASCAT**
 input: /data/person/wup/liusy/sarek/wgs_manta_bqsr.csv
 ```bash
+cd /data/person/wup/liusy/sarek
 nohup nextflow run . \
   -ansi-log false \
   -profile singularity \
@@ -271,7 +272,9 @@ nohup nextflow run . \
 
 ```
 **WGS数据mapping(align, markduplication, BQSR)**
-csv: wgs_fastq.csv
+- csv: wgs_fastq.csv
+- outdir: /data/person/wup/public/liusy_files/sccc/preprocessed_bam/wgs
+
 ```bash
 nohup nextflow run . \
   -ansi-log false \
