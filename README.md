@@ -75,6 +75,12 @@
 - **BAM**：二进制比对结果文件。
 - **CRAM**：更省空间的比对结果格式。
 - **BAI / CRAI**：对应 BAM / CRAM 的索引文件（让工具可快速随机访问）。
+- 如果没有索引文件要构建
+```bash
+samtools dict \
+> /data/person/wup/public/liusy_files/reference_genomes/hg38/data_repo/GRCh38_viral/GCA_000001405.15_GRCh38_no_alt_analysis_set_VIRAL_refmt.fa \
+> -o /data/person/wup/public/liusy_files/reference_genomes/hg38/data_repo/GRCh38_viral/GCA_000001405.15_GRCh38_no_alt_analysis_set_VIRAL_refmt.dict
+```
 
 如果从 `markduplicates` 或更后步骤启动，通常需要 BAM/CRAM 及其索引。
 
